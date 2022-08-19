@@ -1,0 +1,10 @@
+package rules;
+dialect  "java"
+import com.kyu.drools.entity.*
+
+rule "test"
+    when
+        $order:Order(loanAmount != null)
+    then
+        System.out.println("loanAmount不为空");
+end

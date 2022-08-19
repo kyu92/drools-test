@@ -1,0 +1,48 @@
+package order.rules
+import com.kyu.drools.entity.Order
+import com.kyu.drools.entity.VerifyResult
+import com.kyu.drools.controller.TestController
+
+dialect "java"
+
+global TestController testController
+
+rule "score1"
+no-loop true
+salience 0
+    when
+        $order:Order(loanAmount < 1000)
+    then
+        $order.setScore(0);
+        System.out.println("1000以下不加分");
+end
+
+rule "score2"
+no-loop true
+salience 1
+    when
+        $order:Order(loanAmount <= 5000)
+    then
+        $order.setScore(100);
+        System.out.println("增加100积分");
+end
+
+rule "score3"
+no-loop true
+salience 2
+    when
+        $order:Order(loanAmount > 5000)
+    then
+        $order.setScore(300);
+        update($order)
+        System.out.println("大于5000增加300积分");
+end
+
+rule "check"
+salience 3
+    when
+        $order:Order(score > 100)
+    then
+        VerifyResult result = VerifyResult.Companion.accept();
+        testController.test(result);
+end
