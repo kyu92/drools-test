@@ -9,6 +9,7 @@ import org.kie.api.runtime.KieContainer
 import org.kie.api.runtime.KieSession
 import org.kie.internal.io.ResourceFactory
 import org.kie.spring.KModuleBeanFactoryPostProcessor
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
@@ -25,6 +26,7 @@ class DroolsConfig {
     private val kieServices: KieServices = KieServices.Factory.get()
 
     @Bean
+    @ConditionalOnMissingBean(KieFileSystem::class)
     fun kieFileSystem(): KieFileSystem {
         val kieFileSystem = kieServices.newKieFileSystem()
         val resourcePatternResolver = PathMatchingResourcePatternResolver()
@@ -39,6 +41,7 @@ class DroolsConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(KieContainer::class)
     fun kieContainer(kieFileSystem: KieFileSystem): KieContainer {
         val kieRepository = kieServices.repository
         kieRepository.addKieModule { kieRepository.defaultReleaseId }
@@ -48,16 +51,19 @@ class DroolsConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(KieBase::class)
     fun kieBase(kieContainer: KieContainer): KieBase {
         return kieContainer.kieBase
     }
 
     @Bean
+    @ConditionalOnMissingBean(KieSession::class)
     fun kieSession(kieContainer: KieContainer): KieSession {
         return kieContainer.newKieSession()
     }
 
     @Bean
+    @ConditionalOnMissingBean(KModuleBeanFactoryPostProcessor::class)
     fun kiePostProcessor(): KModuleBeanFactoryPostProcessor {
         return KModuleBeanFactoryPostProcessor()
     }

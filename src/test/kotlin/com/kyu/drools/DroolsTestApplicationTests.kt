@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
+import java.util.concurrent.TimeUnit
 import javax.annotation.Resource
 
 @SpringBootTest(classes = [DroolsTestApplicationTests::class])
@@ -36,6 +37,8 @@ class DroolsTestApplicationTests {
             match.rule.packageName == "order.rules"
 //            true
         }
+
+        TimeUnit.SECONDS.sleep(30)
 
         kieSession.dispose()
 
